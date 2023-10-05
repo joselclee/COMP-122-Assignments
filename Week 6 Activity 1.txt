@@ -1,0 +1,51 @@
+;Andre Lee
+;Comp 122 - Assembly
+
+section .data
+    name db 'Andre Lee'
+    namelen equ $-name
+
+    message db 'I have a 5', 10
+    msglen equ $-message
+
+    msg2 db 'I do NOT have a 5', 10
+    msg2len equ $-msg2
+
+section .bss
+
+    num resb 1
+
+section .text
+    global _start
+
+_start:
+    mov eax, 3              ;Read user input
+    mov ebx, 0              ;Clean and check if 5.
+    mov ecx, num
+    mov edx, 1
+    int 80h
+
+    mov al, [num]
+    sub al, '0'
+    cmp al, 5
+    je equalToFive
+
+notEqualToFive:             ;If not equal to five, print msg2.
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, msg2
+    mov edx, msg2len
+    int 80h
+jmp end
+
+equalToFive:                ;Else print message.
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, message
+    mov edx, msglen
+    int 80h
+end:
+
+    mov eax, 1
+    mov ebx, 0
+    int 80h
