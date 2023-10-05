@@ -36,7 +36,7 @@ notEqualToFive:             ;If not equal to five, print msg2.
     mov ecx, msg2
     mov edx, msg2len
     int 80h
-jmp end
+    jmp end
 
 equalToFive:                ;Else print message.
     mov eax, 4
@@ -44,6 +44,7 @@ equalToFive:                ;Else print message.
     mov ecx, message
     mov edx, msglen
     int 80h
+    jmp end
 end:
 
     mov eax, 1

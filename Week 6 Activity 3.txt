@@ -5,15 +5,15 @@ section .data
     name db 'Andre Lee'
     namelen equ $-name
 
-    message db 'Its a B', 10
+    message db 'Its Even', 10
     msglen equ $-message
 
-    msg2 db 'Its NOT a B', 10
+    msg2 db 'Its Odd', 10
     msg2len equ $-msg2
 
 section .bss
 
-    char resb 1
+    num resb 1
 
 section .text
     global _start
@@ -21,23 +21,26 @@ section .text
 _start:
     mov eax, 3              
     mov ebx, 0              
-    mov ecx, char
+    mov ecx, num
     mov edx, 1
     int 80h
 
-    mov al, [char]         ;Check if letter 'B'
-    or al, 32              ;Lowercase or Uppercase
-    cmp al, 'b'
+    mov al, [num]         
+    sub al, '0'
+    
+    mov bl, 2               ;Even if no remainder, else Odd.
+    div bl
+    
+    cmp ah, 0
     je equal
 
-notEqual:                  ;If not equal to B, print msg2.
+notEqual:                   ;If not even, print even, else print odd.
     mov eax, 4
     mov ebx, 1
     mov ecx, msg2
     mov edx, msg2len
     int 80h
     jmp end
-
 equal:
     mov eax, 4
     mov ebx, 1
