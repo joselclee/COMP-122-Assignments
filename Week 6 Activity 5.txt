@@ -1,0 +1,76 @@
+;Andre Lee
+;Comp 122 - Assembly
+
+section .data
+    name db 'Andre Lee'
+    namelen equ $-name
+
+    msg db 'Identical', 10
+    msglen equ $-msg
+
+    msg2 db 'Diferent', 10
+    msg2len equ $-msg2
+
+section .bss
+
+    skip resb 2
+    str1 resb 3
+    str2 resb 3
+
+section .text
+    global _start
+
+_start:
+    mov eax, 3                  ;Read str inputs
+    mov ebx, 0              
+    mov ecx, str1
+    mov edx, 3
+    int 80h
+
+    mov eax, 3              
+    mov ebx, 0              
+    mov ecx, skip
+    mov edx, 2
+    int 80h
+
+    mov eax, 3              
+    mov ebx, 0              
+    mov ecx, str2
+    mov edx, 3
+    int 80h
+
+    mov al, [str1]              ;Check if each char is same
+    mov bl, [str2]        
+    cmp al, bl
+    jnz end
+
+    mov al, [str1+1]
+    mov bl, [str2+1]
+    cmp al, bl
+    jnz end
+
+    mov al, [str1+2]
+    mov bl, [str2+2]
+    cmp al, bl
+    jnz end
+                
+    mov eax, 4              ;If conditions are met, continue till print
+    mov ebx, 1
+    mov ecx, msg
+    mov edx, msglen
+    int 80h
+    
+    mov eax, 1
+    mov ebx, 0
+    int 80h
+
+end:                        ;Jump here if conditions are not met
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, msg2
+    mov edx, msg2len
+    int 80h
+
+    mov eax, 1
+    mov ebx, 0
+    int 80h
