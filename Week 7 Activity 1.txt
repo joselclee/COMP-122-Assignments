@@ -1,0 +1,106 @@
+section .data
+    name db 'Andre Lee', 10
+    namelen equ $-name
+    equasign db '='
+
+section .bss
+    num1 resb 1
+    num2 resb 1
+    skip resb 2
+    oper resb 1
+    answ resb 1
+
+section .text
+    global _start
+
+_start:
+
+    ;Read formula input
+
+    mov eax, 3
+    mov ebx, 0
+    mov ecx, num1
+    mov edx, 2
+    int 80h
+
+    mov eax, 3
+    mov ebx, 0
+    mov ecx, oper
+    mov edx, 1
+    int 80h
+
+    mov eax, 3
+    mov ebx, 0
+    mov ecx, num2
+    mov edx, 2
+    int 80h
+
+    mov al, [oper]
+    cmp al, '+'
+    jmp addition
+
+    cmp al, '-'
+    jmp subtraction
+
+    cmp al, '*'
+    jmp multiplication
+
+    cmp al, '/'
+    jmp division
+
+    ;Various condition logic:
+
+addition:
+
+    mov al, [num1]
+    sub al, '0'
+    mov bl, [num2]
+    sub bl, '0'
+
+    add al,bl
+
+    mov [answ], al
+
+    mov al, [num+1]
+    sub al, '0'
+    mov bl, [num2+]
+    sub bl, '0'
+
+    add al, bl
+
+    mov [answ+1], al
+
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, answ
+    mov edx, 2
+    int 80h
+    
+subtraction:
+
+    mov al, [num1]
+    sub al, '0'
+    mov bl, [num2]
+    sub bl, '0'
+
+    add al,bl
+
+    mov [answ], al
+
+    mov al, [num+1]
+    sub al, '0'
+    mov bl, [num2+1]
+    sub bl, '0'
+
+    add al, bl
+
+    mov [answ+1], al
+
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, answ
+    mov edx, 2
+    int 80h
+
+    
+
