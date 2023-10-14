@@ -1,14 +1,14 @@
 section .data
     name db 'Andre Lee', 10
     namelen equ $-name
-    equasign db '='
+    sign db '='
 
 section .bss
-    num1 resb 1
-    num2 resb 1
+    num1 resb 2
+    num2 resb 2
     skip resb 2
     oper resb 1
-    answ resb 1
+    answ resb 2
 
 section .text
     global _start
@@ -37,16 +37,10 @@ _start:
 
     mov al, [oper]
     cmp al, '+'
-    jmp addition
+    je addition
 
     cmp al, '-'
-    jmp subtraction
-
-    cmp al, '*'
-    jmp multiplication
-
-    cmp al, '/'
-    jmp division
+    je subtraction
 
     ;Various condition logic:
 
@@ -57,23 +51,55 @@ addition:
     mov bl, [num2]
     sub bl, '0'
 
-    add al,bl
-
-    mov [answ], al
-
-    mov al, [num+1]
-    sub al, '0'
-    mov bl, [num2+]
-    sub bl, '0'
-
     add al, bl
 
+    add al, '0'
+    mov [answ], al
+    
+    mov al, [num1+1]
+    sub al, '0'
+    mov bl, [num2+1]
+    sub bl, '0'
+    
+    add al, bl
+    
+    add al, '0'
     mov [answ+1], al
-
+    
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, num1
+    mov edx, 2
+    int 80h
+    
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, oper
+    mov edx, 1
+    int 80h
+    
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, num2
+    mov edx, 2
+    int 80h
+    
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, sign
+    mov edx, 1
+    int 80h
+    
     mov eax, 4
     mov ebx, 1
     mov ecx, answ
-    mov edx, 2
+    mov edx, 1
+    int 80h
+    
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, answ+1
+    mov edx, 1
     int 80h
 
     mov eax, 1
@@ -89,85 +115,55 @@ subtraction:
 
     sub al,bl
 
+    add al, '0'
     mov [answ], al
 
-    mov al, [num+1]
+    mov al, [num1+1]
     sub al, '0'
     mov bl, [num2+1]
     sub bl, '0'
 
     sub al, bl
 
+    add al, '0'
     mov [answ+1], al
 
     mov eax, 4
     mov ebx, 1
-    mov ecx, answ
+    mov ecx, num1
     mov edx, 2
-    int 80h
-
-    mov eax, 1
-    mov ebx, 0
-    int 80h
-
-multiplication:
-
-    mov al, [num1]
-    sub al, '0'
-    mov bl, [num2]
-    sub bl, '0'
-
-    mul bl
-
-    mov [answ], al
-
-    mov al, [num+1]
-    sub al, '0'
-    mov bl, [num2+1]
-    sub bl, '0'
-
-    mul bl
-
-    mov [answ+1], al
-
-    mov eax, 4
-    mov ebx, 1
-    mov ecx, answ
-    mov edx, 2
-    int 80h
-
-    mov eax, 1
-    mov ebx, 0
-    int 80h
-
-division:
-
-    mov al, [num1]
-    sub al, '0'
-    mov bl, [num2]
-    sub bl, '0'
-
-    div bl
-
-    mov [answ], al
-
-    mov al, [num+1]
-    sub al, '0'
-    mov bl, [num2+1]
-    sub bl, '0'
-
-    div bl
-
-    mov [answ+1], al
-
-    mov eax, 4
-    mov ebx, 1
-    mov ecx, answ
-    mov edx, 2
-    int 80h
-
-    mov eax, 1
-    mov ebx, 0
     int 80h
     
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, oper
+    mov edx, 1
+    int 80h
+    
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, num2
+    mov edx, 2
+    int 80h
+    
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, sign
+    mov edx, 1
+    int 80h
+    
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, answ
+    mov edx, 1
+    int 80h
+    
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, answ+1
+    mov edx, 1
+    int 80h
 
+    mov eax, 1
+    mov ebx, 0
+    int 80h
