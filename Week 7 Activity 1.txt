@@ -42,6 +42,12 @@ _start:
     cmp al, '-'
     je subtraction
 
+    cmp al, '*'
+    je multiplication
+
+    cmp al, '/'
+    je division
+
     ;Various condition logic:
 
 addition:
