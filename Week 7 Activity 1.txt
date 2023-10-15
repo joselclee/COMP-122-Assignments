@@ -167,3 +167,59 @@ subtraction:
     mov eax, 1
     mov ebx, 0
     int 80h
+
+multiplication:
+    
+    mov al, [num1]
+    sub al, '0'
+    
+    mov bl, [num2]
+    sub bl, '0'
+    
+    mul bl
+    
+    add al, '0'
+    mov [answ], al
+    add ah, '0'
+    mov [answ+1], ah
+    
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, num1
+    mov edx, 2
+    int 80h
+    
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, oper
+    mov edx, 1
+    int 80h
+    
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, num2
+    mov edx, 2
+    int 80h
+    
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, sign
+    mov edx, 1
+    int 80h
+    
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, answ
+    mov edx, 1
+    int 80h
+    
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, answ+1
+    mov edx, 1
+    int 80h
+
+    mov eax, 1
+    mov ebx, 0
+    int 80h
+    
