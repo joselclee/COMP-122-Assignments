@@ -1,0 +1,46 @@
+section .data
+    name db 'Andre Lee', 10
+    namelen equ $-name
+
+section .bss
+    num resb 1
+    k resb 1
+
+section .text
+    global _start
+
+_start:
+
+    mov eax, 3
+    mov ebx, 0
+    mov ecx, num
+    mov edx, 1
+    int 80h
+
+    mov [k], byte '0'
+
+printer:
+
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, num
+    mov edx, 1
+    int 80h
+    
+    mov al, [num]
+    sub al, '0'
+    sub al, 1
+    add al, '0'
+    mov bl, [k]
+
+    cmp al, bl
+    mov [num], al
+
+    jl terminate
+    jmp printer
+
+terminate:
+    
+    mov eax, 1
+    mov ebx, 0
+    int 80h
