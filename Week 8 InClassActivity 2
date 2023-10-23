@@ -16,8 +16,11 @@ section .data
 section .bss   
     char resb 1
     hi resb 2
+    hiTens resb 2
     lo resb 2
+    loTens resb 2
     nums resb 2
+    numTens resb 2
 
 section .text
     global _start
@@ -29,7 +32,7 @@ _start:
     mov [lo], al
     mov [nums], al
 
-check:
+check:                  ;Check each character for type
 
     mov eax, 3
     mov ebx, 0
@@ -61,39 +64,93 @@ countUpper:
 
     mov al, [hi]
     add al, 1
+    cmp al, 10
+    
+    jg countUpperTens
     mov [hi], al
     
     jmp check
 
+countUpperTens:                ;If no. of uppercase exceed 10, redirect here to count "tens"
+
+    mov al, byte 0
+    mov [hi], al
+    
+    mov al, [hiTens]
+    add al, 1
+    
+    mov [hiTens], al
+    jmp check
+    
 countLower:
 
     mov al, [lo]
     add al, 1
+    cmp al, 10
+    
+    jg countLowerTens
     mov [lo], al
 
+    jmp check
+    
+countLowerTens:                 ;If no. of lowercase exceed 10, redirect here to count "tens"
+
+    mov al, byte 0
+    mov [lo], al
+    
+    mov al, [loTens]
+    add al, 1
+    
+    mov [loTens], al
     jmp check
 
 countNumber:
 
     mov al, [nums]
     add al, 1
-    mov [nums], al
-
-    jmp check
-
-end:
+    cmp al, 10
     
+    jg countNumberTens
+    
+    mov [nums], al
+    jmp check
+    
+countNumberTens:                    ;If no. of digits exceed 10, redirect here to count "tens"
+    
+    mov al, byte 0
+    mov [nums], al
+    
+    mov al, [numTens]
+    add al, 1
+    
+    mov [numTens], al
+    jmp check
+    
+end:
+    ;Convert all variables to 'char'
     mov al, [hi]
     add al, '0'
     mov [hi], al
+    
+    mov al, [hiTens]
+    add al, '0'
+    mov [hiTens], al
 
     mov al, [lo]
     add al, '0'
     mov [lo], al
+    
+    mov al, [loTens]
+    add al, '0'
+    mov [loTens], al
 
     mov al, [nums]
     add al, '0'
     mov [nums], al
+    
+    mov al, [numTens]
+    add al, '0'
+    mov [numTens], al
 
     mov eax, 4
     mov ebx, 1
@@ -103,10 +160,16 @@ end:
 
     mov eax, 4
     mov ebx, 1
-    mov ecx, hi
-    mov edx, 2
+    mov ecx, hiTens
+    mov edx, 1
     int 80h
-
+    
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, hi
+    mov edx, 1
+    int 80h
+    
     mov eax, 4
     mov ebx, 1
     mov ecx, newline
@@ -121,8 +184,14 @@ end:
 
     mov eax, 4
     mov ebx, 1
+    mov ecx, loTens
+    mov edx, 1
+    int 80h
+
+    mov eax, 4
+    mov ebx, 1
     mov ecx, lo
-    mov edx, 2
+    mov edx, 1
     int 80h
 
     mov eax, 4
@@ -137,12 +206,19 @@ end:
     mov edx, len3
     int 80h
 
+    
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, numTens
+    mov edx, 1
+    int 80h
+    
     mov eax, 4
     mov ebx, 1
     mov ecx, nums
-    mov edx, 2
+    mov edx, 1
     int 80h
-
+    
     mov eax, 4
     mov ebx, 1
     mov ecx, newline
@@ -152,6 +228,3 @@ end:
     mov eax, 1
     mov ebx, 0
     int 80h
-
-
-
