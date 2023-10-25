@@ -1,0 +1,310 @@
+section .data
+    name db 'Andre Lee', 10
+    namelen equ $-name
+
+    msg1 db 'Upper case letters: '
+    len1 equ $-msg1
+
+    msg2 db 'Lower case letters: '
+    len2 equ $-msg2
+
+    msg3 db 'Digits: '
+    len3 equ $-msg3
+
+    msg4 db 'Special Symbols: '
+    len4 equ $-msg4
+
+    newline db 10
+
+section .bss   
+    char resb 1
+    hi resb 2
+    hiTens resb 2
+    lo resb 2
+    loTens resb 2
+    nums resb 2
+    ;numTens resb 2
+    spec resb 2
+    spTens resb 2
+
+section .text
+    global _start
+
+_start:
+
+    mov al, 0
+    mov [hi], al
+    mov [lo], al
+    mov [nums], al
+    mov [spec], al
+
+check:                  ;Check each character for type
+
+    mov eax, 3
+    mov ebx, 0
+    mov ecx, char
+    mov edx, 1
+    int 80h
+
+                ;   When checking the char for what type it was, I had
+                ;   to make sure that the ASCII code was ordered from highest to low so that when checking
+                ;   if greater than or equal to, the conditions wouldn't skip over the 
+                ;   lower codes. An exception is given to special characters less than ASCII code 47. so it is
+                ;   placed at the top to avoid miscounting.
+
+    cmp [char], byte '.'
+    jz end
+
+    cmp [char], byte '/' ;0-47
+    jle countSpecial
+
+    cmp [char], byte '{' ;123+
+    jge countSpecial
+
+    cmp [char], byte 'a' ;97-122
+    jge countLower
+
+    cmp [char], byte '[' ;91-96
+    jge countSpecial
+
+    cmp [char], byte 'A' ;65-90
+    jge countUpper
+
+    cmp [char], byte ':' ;58-64
+    jge countSpecial
+    
+    cmp [char], byte 0 ;48-57
+    jge countNumber
+
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, char
+    mov edx, 1
+    int 80h
+
+    jmp check
+
+countSpecial:
+
+    mov al, [spec]
+    add al, 1
+    cmp al, 10
+
+    jge countSpecialTens
+    mov [spec], al
+
+    jmp check
+
+countSpecialTens:           ;If no of special chars exceed 10, redirect here to count tens
+
+    mov al, byte 0
+    mov [spTens], al
+
+    mov al, [spTens]
+    add al, 1
+
+    mov [spTens], al
+    jmp check
+
+countUpper:
+
+    mov al, [hi]
+    add al, 1
+    cmp al, 10
+    
+    jge countUpperTens
+    mov [hi], al
+    
+    jmp check
+
+countUpperTens:                ;If no. of uppercase exceed 10, redirect here to count "tens"
+
+    mov al, byte 0
+    mov [hi], al
+    
+    mov al, [hiTens]
+    add al, 1
+    
+    mov [hiTens], al
+    jmp check
+    
+countLower:
+
+    mov al, [lo]
+    add al, 1
+    cmp al, 10
+    
+    jge countLowerTens
+    mov [lo], al
+
+    jmp check
+    
+countLowerTens:                 ;If no. of lowercase exceed 10, redirect here to count "tens"
+
+    mov al, byte 0
+    mov [lo], al
+    
+    mov al, [loTens]
+    add al, 1
+    
+    mov [loTens], al
+    jmp check
+
+countNumber:
+
+    mov al, [nums]
+    add al, 1
+    ;cmp al, 10
+    
+    ;jge countNumberTens
+    
+    mov [nums], al
+    jmp check
+    
+;Section edited to only keep single digits 0-9
+;countNumberTens:                    ;If no. of digits exceed 10, redirect here to count "tens"
+    
+    ;mov al, byte 0
+    ;mov [nums], al
+    
+    ;mov al, [numTens]
+    ;add al, 1
+    
+    ;mov [numTens], al
+    ;jmp check
+    
+end:
+    ;Convert all variables to 'char' and print how much each counter is holding.
+
+    mov al, [hi]
+    add al, '0'
+    mov [hi], al
+    
+    mov al, [hiTens]
+    add al, '0'
+    mov [hiTens], al
+
+    mov al, [lo]
+    add al, '0'
+    mov [lo], al
+    
+    mov al, [loTens]
+    add al, '0'
+    mov [loTens], al
+
+    mov al, [nums]
+    add al, '0'
+    mov [nums], al
+    
+    ;mov al, [numTens]
+    ;add al, '0'
+    ;mov [numTens], al
+
+    mov al, [spTens]
+    add al, '0'
+    mov [spTens], al
+
+    mov al, [spec]
+    add al, '0'
+    mov [spec], al
+
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, msg1
+    mov edx, len1
+    int 80h
+
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, hiTens
+    mov edx, 1
+    int 80h
+    
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, hi
+    mov edx, 1
+    int 80h
+    
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, newline
+    mov edx, 1
+    int 80h
+
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, msg2
+    mov edx, len2
+    int 80h
+
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, loTens
+    mov edx, 1
+    int 80h
+
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, lo
+    mov edx, 1
+    int 80h
+
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, newline
+    mov edx, 1
+    int 80h
+
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, msg3
+    mov edx, len3
+    int 80h
+
+    
+    ;mov eax, 4
+    ;mov ebx, 1
+    ;mov ecx, numTens
+    ;mov edx, 1
+    ;int 80h
+    
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, nums
+    mov edx, 1
+    int 80h
+    
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, newline
+    mov edx, 1
+    int 80h
+
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, msg4
+    mov edx, len4
+    int 80h
+
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, spTens
+    mov edx, 1
+    int 80h
+
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, spec
+    mov edx, 1
+    int 80h
+
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, newline
+    mov edx, 1
+    int 80h
+
+    mov eax, 1
+    mov ebx, 0
+    int 80h

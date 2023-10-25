@@ -1,0 +1,146 @@
+section .data
+
+    name db 'Andre Lee'
+    namelen equ $-name
+
+    msg1 db '-:'
+    len1 equ $-msg1
+
+    star db '*'
+    open db '['
+    close db ']', 10
+
+
+section .bss
+
+    char1 resb 1
+    char2 resb 1
+    skip resb 2
+    num resb 1
+    numTens resb 1
+    
+section .text
+    global _start
+
+_start:
+
+    mov al, 0
+
+    mov [num], al
+    mov [numTens], al
+
+check: 
+
+    mov eax, 3
+    mov ebx, 0
+    mov ecx, char1
+    mov edx, 1
+    int 80h
+
+    mov eax, 3
+    mov ebx, 0
+    mov ecx, char2
+    mov edx, 1
+    int 80h
+
+    mov al, [char1]
+    cmp al, byte '.'
+
+    je end
+
+    sub al, '0'
+    mov [char1], num
+
+    mov al, [char2]
+    sub al, '0'
+    mov [char2], al
+
+    jmp print1
+    jmp printStar
+
+nextline:
+
+    mov eax, 3
+    mov ebx, 0
+    mov ecx, skip
+    mov edx, 2
+    int 80h
+
+    jmp check
+
+checkTens:
+
+    mov al, [numTens]
+    cmp al, byte 0
+    
+    je print
+
+    sub al, 1
+    mov [numTens], al
+
+    mov al, byte 9
+    mov [num], al
+
+    jmp printStar
+    
+
+printStar:
+
+    mov al, [num]
+    cmp al, byte 0
+    je checkTens
+
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, star
+    mov edx, 1
+    int 80h
+
+    sub al, 1
+    mov [num], al
+    jmp printStar
+    
+print1:
+
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, msg1
+    mov edx, len1
+    int 80h
+
+    jmp printStar
+
+print2:
+
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, open
+    mov edx, 1
+    int 80h
+
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, numTens    
+    mov edx, 1
+    int 80h
+
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, num
+    mov edx, 1
+    int 80h
+
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, close
+    mov edx, 1
+    int 80h
+
+end:
+
+    mov eax, 1
+    mov ebx, 0
+    int 80h
+
+
+
