@@ -1,0 +1,41 @@
+section .data
+    name db 'Andre Lee'
+    len equ $-name
+
+section .bss
+    var resb 4
+    count resb 4
+    
+section .text
+    global _start
+
+_start:
+
+    mov al, byte 230
+    mov [var], al
+    mov bl, byte 0
+    mov [count], bl
+    call Stars
+    jmp end
+
+Stars:
+
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, '*'
+    mov edx, 1
+    int 80h
+
+    mov bl, [count]
+    inc bl
+    cmp bl, al
+    jle end
+    mov [count], bl
+    
+    jmp Stars
+
+end:
+
+    mov eax, 1
+    mov ebx, 0
+    int 80h

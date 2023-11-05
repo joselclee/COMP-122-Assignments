@@ -1,0 +1,64 @@
+section .data
+    name db 'Andre Lee'
+    len equ $-name
+
+section .bss
+    val resb 1
+
+section .text
+    global _start
+
+_start:
+
+    call read
+    call encode
+    call print
+    call decode
+    call add
+    call encode
+    call write
+    jmp end
+
+read:
+
+    mov eax, 3
+    mov ebx, 0
+    mov ecx, val
+    mov edx, 1
+    int 80h
+
+write:
+
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, val
+    mov edx, 1
+    int 80h
+
+encode:
+
+    mov al, [val]
+    add al, '0'
+    mov [val], al
+    ret
+
+decode:
+
+    mov al, [val]
+    sub al, '0'
+    mov [val], al
+    ret
+
+add:
+
+    mov al, [val]
+    mov bl, 1
+    add al, bl
+    mov [val], al
+    ret
+
+end:
+
+    mov eax, 1
+    mov ebx, 0
+    int 80h
