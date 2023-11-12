@@ -4,7 +4,6 @@ section .data
 
 section .bss
     var resb 4
-    count resb 4
     
 section .text
     global _start
@@ -13,8 +12,6 @@ _start:
 
     mov al, byte 230
     mov [var], al
-    mov bl, byte 0
-    mov [count], bl
     call Stars
     jmp end
 
@@ -26,11 +23,11 @@ Stars:
     mov edx, 1
     int 80h
 
-    mov bl, [count]
-    inc bl
-    cmp bl, al
-    jle end
-    mov [count], bl
+    mov al, [var]
+    sub al, byte 1
+    cmp al, byte 0
+    ret
+    mov [var], al
     
     jmp Stars
 

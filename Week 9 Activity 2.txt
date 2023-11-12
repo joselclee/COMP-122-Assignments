@@ -8,7 +8,8 @@ section .data
 
     star db '*'
     open db '['
-    close db ']', 10
+    close db ']'
+    newline db 10
 
 
 section .bss
@@ -18,6 +19,8 @@ section .bss
     skip resb 2
     num resb 1
     numTens resb 1
+    tempNum resb 1
+    tempTens resb 1
     
 section .text
     global _start
@@ -49,14 +52,18 @@ check:
     je end
 
     sub al, '0'
-    mov [char1], num
+    mov [numTens], al
 
     mov al, [char2]
     sub al, '0'
-    mov [char2], al
+    mov [num], al
+
+    mov al, [num]
+    mov [tempNum], al
+    mov al, [numTens]
+    mov [tempTens], al
 
     jmp print1
-    jmp printStar
 
 nextline:
 
@@ -70,25 +77,21 @@ nextline:
 
 checkTens:
 
-    mov al, [numTens]
+    mov al, [tempTens]
     cmp al, byte 0
     
-    je print
+    je print2
 
     sub al, 1
-    mov [numTens], al
+    mov [tempTens], al
 
     mov al, byte 9
-    mov [num], al
+    mov [tempNum], al
 
     jmp printStar
     
 
 printStar:
-
-    mov al, [num]
-    cmp al, byte 0
-    je checkTens
 
     mov eax, 4
     mov ebx, 1
@@ -96,8 +99,12 @@ printStar:
     mov edx, 1
     int 80h
 
+    mov al, [tempNum]
     sub al, 1
-    mov [num], al
+    mov [tempNum], al
+    cmp al, 0
+    jle checkTens
+    
     jmp printStar
     
 print1:
@@ -118,6 +125,14 @@ print2:
     mov edx, 1
     int 80h
 
+    mov al, [num]
+    add al, '0'
+    mov [num], al
+
+    mov al, [numTens]
+    add al, '0'
+    mov [numTens], al
+
     mov eax, 4
     mov ebx, 1
     mov ecx, numTens    
@@ -135,6 +150,14 @@ print2:
     mov ecx, close
     mov edx, 1
     int 80h
+    
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, newline
+    mov edx, 1
+    int 80h
+
+    jmp nextline
 
 end:
 

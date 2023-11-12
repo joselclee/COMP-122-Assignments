@@ -12,7 +12,7 @@ _start:
 
     call read
     call encode
-    call print
+    call write
     call decode
     call add
     call encode

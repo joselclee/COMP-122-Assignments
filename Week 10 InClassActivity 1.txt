@@ -1,0 +1,35 @@
+section .bss
+    val resb 1
+
+section .text
+    global _start
+
+_start:
+
+    call read
+    call write
+    call end
+
+read:
+
+    mov eax, 3
+    mov ebx, 0
+    mov ecx, val
+    mov edx, 1
+    int 80h
+    ret
+
+write:
+
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, val
+    mov edx, 1
+    int 80h
+    ret
+
+end:
+
+    mov eax, 1
+    mov ebx, 0
+    int 80h
