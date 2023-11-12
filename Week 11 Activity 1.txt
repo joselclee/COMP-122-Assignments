@@ -1,0 +1,58 @@
+;Andre Lee
+;Comp 122 - Assembly
+
+section .data
+    name db 'Andre Lee'
+    namelen equ $-name
+
+    message db 'Its a B', 10
+    msglen equ $-message
+
+    msg2 db 'Its NOT a B', 10
+    msg2len equ $-msg2
+
+section .bss
+
+    char resb 1
+
+section .text
+    global _start
+
+_start:
+    
+    call bcheck
+    call end
+
+bcheck:
+
+    mov eax, 3              
+    mov ebx, 0              
+    mov ecx, char
+    mov edx, 1
+    int 80h
+
+    mov al, [char]         ;Check if letter 'B'
+    or al, 32              ;Lowercase or Uppercase
+    cmp al, 'b'
+    je equal
+
+notEqual:                  ;If not equal to B, print msg2.
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, msg2
+    mov edx, msg2len
+    int 80h
+    ret
+
+equal:
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, message
+    mov edx, msglen
+    int 80h
+    ret
+end:
+
+    mov eax, 1
+    mov ebx, 0
+    int 80h
