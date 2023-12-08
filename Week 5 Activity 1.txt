@@ -1,0 +1,274 @@
+;Andre Lee
+;Comp 122 - Assembly
+
+section .data
+    name db 'Andre Lee'
+    namelen equ $-name
+    newline db 10
+    
+section .bss
+    num1 resb 5
+    num2 resb 3
+    skip resb 2
+    temp resb 1
+    result resb 5
+    
+    ones resb 1
+    tens resb 2
+    hundreds resb 3
+    thousands resb 4
+    tenthousands resb 5
+    
+section .text
+    global _start
+
+_start:
+
+    ;Read first number
+    ;---------------Read Tens of thousands
+    mov eax, 3
+    mov ebx, 0
+    mov ecx, temp
+    mov edx, 1
+    int 80h
+    
+    mov ax, [temp]
+    sub ax, '0'
+
+    mov dx, 0
+    mov bx, 10000
+    mul bx
+
+    mov [num1], ax
+
+    ;---------------Read Thousands
+    mov eax, 3
+    mov ebx, 0
+    mov ecx, temp
+    mov edx, 1
+    int 80h
+
+    mov ax, [temp]
+    sub ax, '0'
+    
+    mov dx, 0
+    mov bx, 1000
+    mul bx
+
+    mov cx, [num1]
+    add ax, cx
+    mov [num1], ax 
+
+    ;---------------Read Hundreds
+    mov eax, 3
+    mov ebx, 0
+    mov ecx, temp
+    mov edx, 1
+    int 80h
+
+    mov ax, [temp]
+    sub ax, '0'
+    
+    mov dx, 0
+    mov bx, 100
+    mul bx
+
+    mov cx, [num1]
+    add ax, cx
+    mov [num1], ax 
+
+    ;---------------Read Tens
+    mov eax, 3
+    mov ebx, 0
+    mov ecx, temp
+    mov edx, 1
+    int 80h
+
+    mov ax, [temp]
+    sub ax, '0'
+
+    mov dx, 0
+    mov bx, 10
+    mul bx
+
+    mov cx, [num1]
+    add ax, cx
+
+    mov [num1], ax  
+
+    ;---------------Read Ones
+    mov eax, 3
+    mov ebx, 0
+    mov ecx, temp
+    mov edx, 1
+    int 80h
+
+    mov ax, [temp]
+    sub ax, '0'
+    mov cx, [num1]
+    add ax, cx
+    
+    mov [num1], ax 
+
+    ;------------------------------------------------------------------------   
+    mov eax, 3
+    mov ebx, 0
+    mov ecx, skip
+    mov edx, 2
+    int 80h
+    ;------------------------------------------------------------------------ 
+
+    ;Read second number    
+    ;---------------Read Hundreds
+    mov eax, 3
+    mov ebx, 0
+    mov ecx, temp
+    mov edx, 1
+    int 80h
+
+    mov ax, [temp]
+    sub ax, '0'
+    
+    mov dx, 0
+    mov bx, 100
+    mul bx
+
+    mov [num2], ax 
+
+    ;---------------Read Tens
+    mov eax, 3
+    mov ebx, 0
+    mov ecx, temp
+    mov edx, 1
+    int 80h
+
+    mov ax, [temp]
+    sub ax, '0'
+
+    mov dx, 0
+    mov bx, 10
+    mul bx
+    
+    mov cx, [num2]
+    add ax, cx
+
+    mov [num2], ax  
+
+    ;---------------Read Ones
+    mov eax, 3
+    mov ebx, 0
+    mov ecx, temp
+    mov edx, 1
+    int 80h
+
+    mov ax, [temp]
+    sub ax, '0'
+    mov cx, [num2]
+    add ax, cx
+    
+    mov [num2], ax 
+    
+    ;Arithmetic 
+    ;------------------------------------------------------------------------
+    mov ax, 0
+    mov bx, 0
+    mov cx, 0
+    mov dx, 0
+
+
+    mov ax, [num1]
+    mov bx, [num2]
+    
+    sub ax, bx
+   
+    mov dx, 10000           ;divide by ten thousand
+    div dx
+    
+    add ax, '0'
+    mov [tenthousands], ax
+
+    mov bx, 0
+
+    mov ax, dx
+    mov bx, 1000            ;divide by one thousand
+    div bx
+
+    add ax, '0'
+    mov [thousands], ax
+
+    mov ax, dx
+    mov bx, 0
+
+    mov bx, 100             ;divide by one hundred
+    div bx
+
+    add ax, '0'
+    mov [hundreds], ax
+
+    mov ax, dx
+    mov cx, 10              ;divide by ten
+    div cx
+
+    add ax, '0'
+    mov [tens], ax
+
+    add cx, '0'
+    mov [ones], cx
+    
+    ;Number check
+    ;-----------------------------------------------------------------------
+    mov ax,[num1]
+    add ax, '0'
+    mov [num1], ax
+    
+    mov ax,[num2]
+    add ax, '0'
+    mov [num2], ax
+    ;Printing
+    ;------------------------------------------------------------------------
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, name
+    mov edx, namelen
+    int 80h
+
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, newline
+    mov edx, 1
+    int 80h
+    
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, tenthousands
+    mov edx, 1
+    int 80h
+
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, thousands
+    mov edx, 1
+    int 80h
+
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, hundreds
+    mov edx, 1
+    int 80h
+
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, tens
+    mov edx, 1
+    int 80h
+    
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, ones
+    mov edx, 1
+    int 80h
+    
+    mov eax, 1
+    mov ebx, 0
+    int 80h
+

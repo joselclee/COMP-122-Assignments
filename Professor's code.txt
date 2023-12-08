@@ -1,0 +1,149 @@
+Professor's code
+
+    mov [d1],al
+    mov [d2],ah
+    mov [d3],dl
+    mov [d4],dh
+
+    mov al,0
+    mov ah,0
+    mov bl,0
+    mov bh,0
+
+    mov al,[d1]
+    mov bl,10
+    div bl
+    add al,'0'
+    add ah,'0'
+    mov [q],al
+    mov [r],ah
+
+    mov eax,4
+    mov ebx,1
+    mov ecx,q
+    mov edx,1
+    int 80h;
+
+    mov eax,4
+    mov ebx,1
+    mov ecx,r
+    mov edx,1
+    int 80h;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+    mov al,0
+    mov ah,0
+    mov bl,0
+    mov bh,0
+
+    mov al,[d2]
+    mov bl,10
+    div bl
+    add al,'0'
+    add ah,'0'
+    mov [q],al
+    mov [r],ah
+
+    mov eax,4
+    mov ebx,1
+    mov ecx,q
+    mov edx,1
+    int 80h;
+
+    mov eax,4
+    mov ebx,1
+    mov ecx,r
+    mov edx,1
+    int 80h;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+    mov al,0
+    mov ah,0
+    mov bl,0
+    mov bh,0
+
+
+    mov al,[d3];
+    mov bl,100
+    div bl
+    add al,'0';
+    mov [q],al
+    mov [r1],ah
+ 
+    mov al,0
+    mov ah,0
+    mov bl,0
+    mov bh,0
+ 
+    mov al,[r1]
+    mov bl,10
+    div bl
+    add al,'0'
+    add ah,'0'
+    mov [r1],al
+    mov [r2],ah
+
+    mov eax,4
+    mov ebx,1
+    mov ecx,q
+    mov edx,1
+    int 80h;
+
+
+    mov eax,4
+    mov ebx,1
+    mov ecx,r1
+    mov edx,1
+    int 80h;
+
+
+    mov eax,4
+    mov ebx,1
+    mov ecx,r2
+    mov edx,1
+    int 80h;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+    mov al,0
+    mov ah,0
+    mov bl,0
+    mov bh,0
+
+
+    mov al,[d4];
+    mov bl,100
+    div bl
+    add al,'0';
+    mov [q],al
+
+    mov al,ah
+    mov bl,10
+    div bl
+    add al,'0'
+    add ah,'0'
+    mov [r1],al
+    mov [r2],ah
+
+    mov eax,4
+    mov ebx,1
+    mov ecx,q
+    mov edx,1
+    int 80h;
+
+    mov eax,4
+    mov ebx,1
+    mov ecx,r1
+    mov edx,1
+    int 80h;
+
+    mov eax,4
+    mov ebx,1
+    mov ecx,r2
+    mov edx,1
+    int 80h;
+
+    mov eax,1          
+    mov ebx,0          
+    int 80h;

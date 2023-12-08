@@ -1,0 +1,64 @@
+section .data
+   name db 'Andre Lee'
+   namelen equ $-name
+   newline db 10
+   
+section .bss
+    input resb 10
+    z
+section .text
+    global _start
+    
+_start
+
+mov eax, 3
+mov ebx, 0
+mov ecx, input,
+mov edx, 10
+int 80h
+
+mov eax, 4
+mov ebx, 1
+mov ecx, name
+mov edx, namelen
+int 80h
+
+mov eax, 4
+mov ebx, 1
+mov ecx, newline
+mov edx, 1
+int 80h
+
+mov eax, 4
+mov ebx, 1
+mov ecx, input
+mov edx, 1
+int 80h
+
+mov eax, 4
+mov ebx, 1
+mov ecx, input+2
+mov edx, 1
+int 80h
+
+mov eax, 4
+mov ebx, 1
+mov ecx, input+4
+mov edx, 1
+int 80h
+
+mov eax, 4
+mov ebx, 1
+mov ecx, input+6
+mov edx, 1
+int 80h
+
+mov eax, 4
+mov ebx, 1
+mov ecx, input+8
+mov edx, 1
+int 80h
+
+mov eax, 1
+mov ebx, 0
+int 80h

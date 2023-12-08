@@ -1,0 +1,75 @@
+section .data
+    lbl1 db 'The first number is: '
+    len1 equ $-lbl1
+    lbl2 db 'The second number is: '
+    len2 equ $-lbl2
+    lbl3 db 'The third number is: '
+    len3 equ $-lbl3
+
+    newline db 10
+
+section .bss
+    number resb 3
+
+section .text
+    global _start
+
+    _start
+
+mov eax, 3          ;get number
+mov ebx, 0
+mov ecx, number
+mov edx, 3
+int 80h
+
+mov eax, 4          ;print first statement + number
+mov ebx, 1
+mov ecx, lbl1
+mov edx, len1
+int 80h
+
+mov eax, 4
+mov ebx, 1
+mov ecx, number
+mov edx, 1
+int 80h
+
+mov eax, 4          ;newline
+mov ebx, 1
+mov ecx, newline
+mov edx, 1
+int 80h
+
+mov eax, 4          ;print second statement + number
+mov ebx, 1
+mov ecx, lbl2
+mov edx, len2
+int 80h
+
+mov eax, 4          
+mov ebx, 1
+mov ecx, number+1
+mov edx, 1
+int 80h
+
+mov eax, 4          ;newline
+mov ebx, 1
+mov ecx, newline
+mov edx, 1
+int 80h
+
+mov eax, 4          ;print third statement + number
+mov ebx, 1
+mov ecx, lbl3
+mov edx, len3
+int 80h
+
+mov eax, 4
+mov ebx, 1
+mov ecx, number+2
+mov edx, 1
+int 80h
+
+mov eax, 1          ;end process
+mov ebx, 0
+int 80h

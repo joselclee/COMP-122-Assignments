@@ -1,0 +1,66 @@
+section .bss
+    num1 resb 1
+    num2 resb 1
+    num3 resb 1
+    skip resb 1
+    result resb 1
+
+section .text
+    global _start
+
+_start:
+    ;input
+
+    mov eax, 3          ;input1
+    mov ebx, 0
+    mov ecx, num1
+    mov edx, 1
+    int 80h
+
+    mov eax, 3
+    mov ebx, 0
+    mov ecx, skip
+    mov edx, 1
+    int 80h
+
+    mov eax, 3          ;input2
+    mov ebx, 0
+    mov ecx, num2
+    mov edx, 1
+    int 80h
+
+    mov eax, 3
+    mov ebx, 0
+    mov ecx, skip
+    mov edx, 1
+    int 80h
+
+    mov eax, 3          ;input3
+    mov ebx, 0
+    mov ecx, num3
+    mov edx, 1
+    int 80h
+
+    ;clean and perform operations on nums
+
+    mov al, [num1]
+    sub al, '0'
+    mov bl, [num2]
+    sub bl, '0'
+    add al, bl
+    mov cl, [num3]
+    sub cl, '0'
+    add al, cl
+
+    add al, '0'
+    mov [result], al
+
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, result
+    mov edx, 1
+    int 80h
+
+    mov eax, 1
+    mov ebx, 0
+    int 80h

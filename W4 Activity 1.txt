@@ -1,0 +1,67 @@
+section .data
+    space db 32
+
+section .bss
+    num resb 1
+
+section .text
+    global _start
+
+_start:
+    mov eax, 3      ;read number
+    mov ebx, 0
+    mov ecx, num
+    mov edx, 1
+    int 80h
+    
+    mov ax, [num]   ;subtract 1
+    sub ax,1
+    mov [num],ax
+    
+    mov eax, 4      ;print space
+    mov ebx, 1
+    mov ecx, space
+    mov edx, 1
+    int 80h
+    
+    mov eax, 4      ;print n-1
+    mov ebx, 1
+    mov ecx, num
+    mov edx, 1
+    int 80h
+    
+    mov ax, [num]   ;add 1
+    add ax,1
+    mov [num],ax
+    
+    mov eax, 4      ;print space
+    mov ebx, 1
+    mov ecx, space
+    mov edx, 1
+    int 80h
+    
+    mov eax, 4      ;print n
+    mov ebx, 1
+    mov ecx, num
+    mov edx, 1
+    int 80h
+    
+    mov ax, [num]   ;add n+1
+    add ax,1
+    mov [num],ax
+    
+    mov eax, 4      ;print space
+    mov ebx, 1
+    mov ecx, space
+    mov edx, 1
+    int 80h
+
+    mov eax, 4      ;print num
+    mov ebx, 1
+    mov ecx, num
+    mov edx, 1
+    int 80h  
+    
+    mov eax, 1
+    mov ebx, 0
+    int 80h

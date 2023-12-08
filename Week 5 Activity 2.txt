@@ -1,0 +1,292 @@
+;Andre Lee
+;Comp 122 - Assembly
+
+section .data
+    name db 'Andre Lee'
+    namelen equ $-name
+    
+section .bss
+    num1 resb 4
+    num2 resb 4
+    skip resb 2
+    temp resb 1
+    
+    d1 resb 1
+    d2 resb 1
+    d3 resb 1
+    d4 resb 1
+
+    t1 resb 1
+    t2 resb 1
+    r1 resb 1
+    r2 resb 1
+
+    q resb 1
+    r resb 1
+    
+section .text
+    global _start
+
+_start:
+    ;Read first number
+    ;---------------Read Hundreds
+    mov eax, 3
+    mov ebx, 0
+    mov ecx, temp
+    mov edx, 1
+    int 80h
+    
+    mov ax, [temp]
+    sub ax, '0'
+    mov bx, 100
+    mul bx
+
+    mov [num1], ax 
+
+    ;---------------Read Tens
+    mov eax, 3
+    mov ebx, 0
+    mov ecx, temp
+    mov edx, 1
+    int 80h
+    
+    mov ax, [temp]
+    sub ax, '0'
+    mov bx, 10
+    mul bx
+    mov bx, [num1]
+    add ax, bx
+
+    mov [num1], ax
+
+    ;---------------Read Ones
+    mov eax, 3
+    mov ebx, 0
+    mov ecx, temp
+    mov edx, 1
+    int 80h
+    
+    mov ax, [temp]
+    sub ax, '0'
+    mov bx, [num2]
+    add ax, bx
+    
+    mov [num1], ax
+
+    ;------------------------------------------
+    mov eax, 3
+    mov ebx, 0
+    mov ecx, skip
+    mov edx, 2
+    int 80h
+    ;------------------------------------------
+
+    ;Read second number
+    ;---------------Read Hundreds
+    mov eax, 3
+    mov ebx, 0
+    mov ecx, temp
+    mov edx, 1
+    int 80h
+    
+    mov ax, [temp]
+    sub ax, '0'
+    mov bx, 100
+    mul bx
+    mov [num2], ax 
+
+    ;---------------Read Tens
+    mov eax, 3
+    mov ebx, 0
+    mov ecx, temp
+    mov edx, 1
+    int 80h
+    
+    mov ax, [temp]
+    sub ax, '0'
+    mov bx, 10
+    mul bx
+    mov bx, [num2]
+    add ax, bx
+
+    mov [num2], ax  
+
+    ;---------------Read Ones
+    mov eax, 3
+    mov ebx, 0
+    mov ecx, temp
+    mov edx, 1
+    int 80h
+    
+    mov ax, [temp]
+    sub ax, '0'
+    mov bx, [num2]
+    add ax, bx
+    
+    mov [num2], ax
+
+    ;Arithmetic
+    ;---------------------------------------------
+
+    mov ax, 0
+    mov bx, 0
+    mov cx, 0
+    mov dx, 0
+    mov al, 0
+    mov ah, 0
+    mov bl, 0
+    mov bh, 0
+    
+    mov ax, [num1]
+    mov bx, [num2]
+
+    mul bx
+
+
+    ;---------------------------------------------
+    mov [d1],al
+    mov [d2],ah
+    mov [d3],dl
+    mov [d4],dh
+
+    mov al,0
+    mov ah,0
+    mov bl,0
+    mov bh,0
+
+    mov al,[d1]
+    mov bl,10
+    div bl
+    add al,'0'
+    add ah,'0'
+    mov [q],al
+    mov [r],ah
+
+    mov eax,4
+    mov ebx,1
+    mov ecx,q
+    mov edx,1
+    int 80h;
+
+    mov eax,4
+    mov ebx,1
+    mov ecx,r
+    mov edx,1
+    int 80h;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+    mov al,0
+    mov ah,0
+    mov bl,0
+    mov bh,0
+
+    mov al,[d2]
+    mov bl,10
+    div bl
+    add al,'0'
+    add ah,'0'
+    mov [q],al
+    mov [r],ah
+
+    mov eax,4
+    mov ebx,1
+    mov ecx,q
+    mov edx,1
+    int 80h;
+
+    mov eax,4
+    mov ebx,1
+    mov ecx,r
+    mov edx,1
+    int 80h;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+    mov al,0
+    mov ah,0
+    mov bl,0
+    mov bh,0
+
+
+    mov al,[d3];
+    mov bl,100
+    div bl
+    add al,'0';
+    mov [q],al
+    mov [r1],ah
+ 
+    mov al,0
+    mov ah,0
+    mov bl,0
+    mov bh,0
+ 
+    mov al,[r1]
+    mov bl,10
+    div bl
+    add al,'0'
+    add ah,'0'
+    mov [r1],al
+    mov [r2],ah
+
+    mov eax,4
+    mov ebx,1
+    mov ecx,q
+    mov edx,1
+    int 80h;
+
+
+    mov eax,4
+    mov ebx,1
+    mov ecx,r1
+    mov edx,1
+    int 80h;
+
+
+    mov eax,4
+    mov ebx,1
+    mov ecx,r2
+    mov edx,1
+    int 80h;
+;----------------------------
+    mov al,0
+    mov ah,0
+    mov bl,0
+    mov bh,0
+
+
+    mov al,[d4];
+    mov bl,100
+    div bl
+    add al,'0';
+    mov [q],al
+
+    mov al,ah
+    mov bl,10
+    div bl
+    add al,'0'
+    add ah,'0'
+    mov [r1],al
+    mov [r2],ah
+
+    mov eax,4
+    mov ebx,1
+    mov ecx,q
+    mov edx,1
+    int 80h;
+
+    mov eax,4
+    mov ebx,1
+    mov ecx,r1
+    mov edx,1
+    int 80h;
+
+    mov eax,4
+    mov ebx,1
+    mov ecx,r2
+    mov edx,1
+    int 80h;
+
+    mov eax,1          
+    mov ebx,0          
+    int 80h;
+   

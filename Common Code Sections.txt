@@ -1,0 +1,11 @@
+;Andre Lee
+;Comp 122 - Assembly
+
+section .data
+
+section .bss
+
+section .text
+    global _start
+
+_start:
