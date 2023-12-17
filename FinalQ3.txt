@@ -1,0 +1,98 @@
+section .data
+
+    name db 'Andre Lee'
+    namelen equ $-name
+
+    ;hardcoded symbols
+    space db ' '
+    period db '.'
+    underscore db '_'
+    x db 'x'
+
+    newline db 10
+
+
+section .bss
+
+    char resb 1
+    
+section .text
+    global _start
+
+_start:
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, name
+    mov edx, namelen
+    int 80h
+
+check:
+    ; Check each character one by one, move it to al
+    ; and compare if it matches '.', 1, 2 ,3 or none
+    ; if it matches, jump to its predefined section
+    ; if it doesn't match, jump to the whatever section to
+    ; print an x.
+
+    mov eax, 3
+    mov ebx, 0
+    mov ecx, char
+    mov edx, 1
+    int 80h
+
+    mov al, [char]
+    cmp al, byte '.'
+
+    je end
+
+    cmp al, byte '1'
+    je one
+
+    cmp al, byte '2'
+    je two
+
+    cmp al, byte '3'
+    je three
+
+    jmp whatever
+
+one:
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, space
+    mov edx, 1
+    int 80h
+
+    jmp check
+
+two:
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, period
+    mov edx, 1
+    int 80h
+
+    jmp check
+
+three:
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, underscore
+    mov edx, 1
+    int 80h
+
+    jmp check
+
+whatever:
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, x
+    mov edx, 1
+    int 80h
+
+    jmp check
+
+end:
+
+    mov eax, 1
+    mov ebx, 0
+    int 80h
